@@ -1,5 +1,6 @@
+import  jwt from "jsonwebtoken"
 import mongoose from "mongoose"
-
+import bcrypt from "bcrypt"
 const captainSchema = new mongoose.Schema({
     fullName: {
         firstName: {
@@ -34,7 +35,7 @@ const captainSchema = new mongoose.Schema({
         color: {
             type : String,
             trim :true,
-            requierd:true,
+            required:true,
             minlength:[3, " Color should be at least 3 character long"]
         },
         plate:{
@@ -66,3 +67,23 @@ const captainSchema = new mongoose.Schema({
     }
 
 })
+
+captainSchema.methods.createJwtToken = function(){
+    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn : "7d" })
+}
+
+captainSchema.methods.comparePasswords = async function(password) {
+    return bcrypt.compare(password, this.password)
+}
+
+captainSchema.statics.hashPassword = async function(password) {
+    return bcrypt.hash(password, 10)
+}
+
+captainSchema.statics.verifyToken =  function (token) {
+    const  decode =  jwt.verify(token,process.env.JWT_SECRET)
+    return decode._id
+}
+const captainModel =  mongoose.model("captainModel",captainSchema)
+
+export default captainModel

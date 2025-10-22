@@ -6,7 +6,7 @@ const userAuth = async (req,res,next)=>{
         const token = req?.cookies?.token
         if(!token) return res.status(400).json({message : "unauthorized access"})
 
-        const isBlackList = blackListTokenModel.findOne({token})
+        const isBlackList = await blackListTokenModel.findOne({token})
 
         if(isBlackList) return res.status(400).json({message : "login again"})
 
