@@ -21,8 +21,8 @@ userRoute.post("/login",
     ,loginController)
 
     
-    userRoute.get("/profile",userAuth,userProfile)
+userRoute.get("/profile",userAuth,userProfile)
     
-    userRoute.get("/logout",logoutController)
+userRoute.get("/logout",logoutController)
 
 export default userRoute

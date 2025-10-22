@@ -1,23 +1,25 @@
+import blackListTokenModel from "../Models/blackListTokenModel.js"
 import UserModel from "../Models/userModel.js"
 
 const userAuth = async (req,res,next)=>{
     try {
         const token = req?.cookies?.token
-        console.log(token)
-        if(!token) return res.status(400).json({message : "unauthorized access of token"})
-        console.log("token")
+        if(!token) return res.status(400).json({message : "unauthorized access"})
+
+        const isBlackList = blackListTokenModel.findOne({token})
+
+        if(isBlackList) return res.status(400).json({message : "login again"})
+
         const userId = await UserModel.verifyToken(token)
-        console.log(userId)
         const user = await UserModel.findById(userId)
-        console.log(user)
-        if (!user) return res.status(400).json({message : "unauthorized access user"})
+        if (!user) return res.status(400).json({message : "unauthorized access"})
 
         req.user = user
 
         next()
 
     } catch (error) {
-        return res.status(400).json({message : "unauthorized access while verifying token",error})
+        return res.status(400).json({message : "unauthorized access",error})
     }
 }
 
