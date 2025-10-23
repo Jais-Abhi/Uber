@@ -4,13 +4,19 @@ import express, { urlencoded } from "express";
 import userRoute from "./Routes/userRouter.js";
 import cookieParser from "cookie-parser";
 import captainRoute from "./Routes/captainRoute.js";
-
+import cors from "cors"
 
 const app = express()
 
 app.use(express.json())
 app.use(urlencoded({extended:true}))
 app.use(cookieParser())
+app.use(cors({
+    origin : "http://localhost:5173",
+    credentials :true
+}
+))
+
 
 app.get("/",(req,res)=>{
     res.send("Hello from backend")
