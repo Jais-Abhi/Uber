@@ -51,7 +51,7 @@ const registerController = async (req,res)=>{
         delete captainObj.password
 
 
-        return res.status(201).json(captainObj)
+        return res.status(201).json({token,captainObj})
 
     } catch (error) {
         return res.status(500).json(error.message)
@@ -83,7 +83,7 @@ const loginController = async (req,res)=>{
         const captainObj = captain.toObject()
         delete captainObj.password
 
-        return res.status(201).json(captainObj)
+        return res.status(201).json({token,captainObj})
 
 
 
@@ -103,7 +103,7 @@ const logoutController = async (req, res) => {
         const blackListToken = await blackListTokenModel.create({token})
 
 
-        return res.status(200).json({ message: "Logged out", token });
+        return res.status(201).json({ message: "Logged out", token });
 
     } catch (error) {
         return res.status(400).json({ message: "log out failed",error });
@@ -115,9 +115,9 @@ const captainProfile = async(req,res)=>{
     try {
         const captain = req.captain
         console.log(captain)    
-        return res.status(200).json(captain)
+        return res.status(201).json(captain)
     } catch (error) {
-        
+        return res.status(400).json({ message: "captain Profile not found",error });
     }
 }
 

@@ -34,12 +34,13 @@ const registerController = async (req,res)=>{
         console.log(token)
 
         res.cookie("token",token)
+        // localStorage.setItem("token", token)
 
         const userObj = user.toObject()
         delete userObj.password
 
 
-        return res.status(201).json(userObj)
+        return res.status(201).json({token,userObj})
 
     } catch (error) {
         return res.status(500).json(error.message)
@@ -68,9 +69,13 @@ const loginController = async (req,res)=>{
         console.log(token)
         
         res.cookie("token",token)
+        // localStorage.setItem("token", token)
+
+        const userObj = user.toObject()
+        delete userObj.password
 
             
-        return res.status(201).json(user)
+        return res.status(201).json({token,userObj})
 
 
 
@@ -85,12 +90,14 @@ const logoutController = async (req, res) => {
         const token = req.cookies?.token;
         console.log(token)
         res.clearCookie("token");
+        // localStorage.removeItem("token");
+
         if(!token) return res.status(200).json({ message: "Logged out", token });
 
         const blackListToken = await blackListTokenModel.create({token})
 
 
-        return res.status(200).json({ message: "Logged out", token });
+        return res.status(201).json({ message: "Logged out", token });
 
     } catch (error) {
         return res.status(400).json({ message: "log out failed",error });
@@ -102,9 +109,9 @@ const userProfile = async(req,res)=>{
     try {
         const user = req.user
         console.log(user)    
-        return res.status(200).json(user)
+        return res.status(201).json(user)
     } catch (error) {
-        
+        return res.status(400).json({ message: "userProfile not found",error });
     }
 }
 

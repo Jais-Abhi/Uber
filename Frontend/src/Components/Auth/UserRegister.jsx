@@ -1,5 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import axios from "axios"
+import { serverUrl } from '../../main.jsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserData } from '../../Redux/userSlice.js'
 
 const UserRegister = () => {
     const [firstName, setFirstName] = React.useState('')
@@ -9,6 +13,10 @@ const UserRegister = () => {
     const [showPassword, setShowPassword] = React.useState(false)
     const [confirmPassword, setConfirmPassword] = React.useState('')
     const [error, setError] = React.useState('')
+
+
+    const dispatch = useDispatch()
+    const {userData}= useSelector((state)=>state.user)
 
     const validate = () => {
         if (!firstName) return 'First name is required'
@@ -21,13 +29,37 @@ const UserRegister = () => {
         return ''
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const err = validate()
         setError(err)
         if (err) return
+        const userData = 
+        {
+            fullName : {firstName,lastName},
+            email,
+            password
+        }
+        console.log('Registering user', userData)
 
-        console.log('Registering user', { firstName, lastName, email, password })
+        try {
+            const response = await axios.post(`${serverUrl}/api/auth/user/register`,userData,{withCredentials:true})
+            console.log(response)
+            console.log(response.data.userObj)
+            console.log(response.data.token)
+            if(response.status===201){
+                localStorage.setItem("token",response.data.token)
+                dispatch(setUserData(response.data.userObj))
+                setFirstName("")
+                setLastName("")
+                setEmail("")
+                setPassword("")
+                setConfirmPassword("")
+            }
+        } catch (error) {
+            console.log(error)
+            setError(error?.response?.data?.message)
+        }
     }
 
     return (

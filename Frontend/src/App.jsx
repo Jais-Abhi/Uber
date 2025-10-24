@@ -1,12 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Start from './Components/start.jsx'
 import UserLogin from './Components/Auth/userLogin.jsx'
 import UserRegister from './Components/Auth/userRegister.jsx'
 import CaptainLogin from './Components/Auth/captainLogin.jsx'
 import CaptainRegister from './Components/Auth/captainRegister.jsx'
+import getCurrentUser from './Hooks/getCurrentUser.js'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
+
+  const{userData}= useSelector((state)=>state.user)
+  const dispatch = useDispatch()
+  console.log(userData)
+  useEffect(()=>{
+    if(!userData){
+      getCurrentUser(dispatch);
+    }
+  },[userData,dispatch])
+  console.log(userData)
+
   return (
     <Routes>
       <Route path="/" element={<Start />} />

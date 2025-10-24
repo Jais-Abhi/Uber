@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { setUserData } from '../../Redux/userSlice.js'
+import { serverUrl } from '../../main.jsx'
+import axios from 'axios'
 
 const UserLogin = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [showPassword, setShowPassword] = React.useState(false)
     const [error, setError] = React.useState('')
-    const [userDAta,setUserData] = useState({})
+
+    const dispatch = useDispatch()
+    const {userData}= useSelector((state)=>state.user)
     const validate = () => {
         if (!email) return 'Email is required'
         if (!/^\S+@\S+\.\S+$/.test(email)) return 'Enter a valid email'
@@ -15,17 +21,25 @@ const UserLogin = () => {
         return ''
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
         const err = validate()
         setError(err)
         if (err) return
         const data = {email,password}
-        setUserData(data)
-        setEmail("")
-        setPassword("")
-        console.log(userDAta)
-
+        try {
+            const response = await axios.post(`${serverUrl}/api/auth/user/login`,data,{withCredentials:true})
+            
+            if(response.status===201){
+                localStorage.setItem("token",response.data.token)
+                dispatch(setUserData(response.data.userObj))
+                setEmail("")
+                setPassword("")
+            }
+        } catch (error) {
+            console.log(error)
+            setError(error?.response?.data?.message)
+        }
     }
 
     return (

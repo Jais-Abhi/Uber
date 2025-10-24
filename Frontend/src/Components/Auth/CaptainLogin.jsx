@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { setCaptainData } from '../../Redux/captainSlice.js'
 
 const CaptainLogin = () => {
     const [email, setEmail] = React.useState('')
@@ -15,14 +16,26 @@ const CaptainLogin = () => {
         return ''
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const err = validate()
         setError(err)
         if (err) return
-
-
-        console.log('Logging in user', { email, password })
+        const data = {email,password}
+        console.log(data)
+        try {
+            const response = await axios.post(`${serverUrl}/api/auth/captain/login`,data,{withCredentials:true})
+            
+            if(response.status===201){
+                localStorage.setItem("token",response.data.token)
+                dispatch(setCaptainData(response.data.captainObj))
+                setEmail("")
+                setPassword("")
+            }
+        } catch (error) {
+            console.log(error)
+            setError(error?.response?.data?.message)
+        }
     }
 
     return (
@@ -31,7 +44,8 @@ const CaptainLogin = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4 pt-8">
                 <div className='pb-3'>
-                    <label className="block text-xl font-medium text-gray-700 mb-3">What's your email</label>
+                    <label className="block text-xl font-medium text-gray-700 mb-3">
+                        Captain's email</label>
                     <input
                         type="email"
                         value={email}

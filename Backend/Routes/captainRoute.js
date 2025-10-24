@@ -55,6 +55,7 @@ captainRoute.post("/login",[
             .notEmpty().withMessage("password is required")
             .isLength({ min: 6 }).withMessage("password must be at least 6 characters"),
     ],
+    
     loginController
 )
 
