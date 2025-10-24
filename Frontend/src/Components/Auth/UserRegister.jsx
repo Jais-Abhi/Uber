@@ -99,7 +99,8 @@ const UserRegister = () => {
                 </button>
             </Link>
 
-            <div className=" w-[88%] absolute bottom-8 text-md font-bold text-gray-800 bg-green-500 mt-6 p-2 rounded-md">
+            <div 
+            className=" w-[88%] absolute bottom-8 text-md font-bold text-gray-800 bg-green-500 mt-6 p-2 rounded-md">
                 <Link
                     to="/captain/register"
                     type="button"

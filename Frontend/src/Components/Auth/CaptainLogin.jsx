@@ -73,7 +73,8 @@ const CaptainLogin = () => {
                 </button>
             </Link>
 
-            <div className=" w-[88%] absolute bottom-8 text-md font-bold text-gray-800 bg-orange-400 mt-6 p-2 rounded-md">
+            <div 
+            className=" w-[88%] absolute bottom-8 text-md font-bold text-gray-800 bg-orange-400 mt-6 p-2 rounded-md">
                 <Link
                     to="/user/login"
                     type="button"
