@@ -10,6 +10,6 @@ export const connectToDb = ()=>{
         console.log("Connected to Database")
     })
     .catch((err)=>{
-        console.log(err.message)
+        console.log("Mongo DB connection Failed :-  ",err.message)
     })
 }

@@ -108,7 +108,7 @@ const logoutController = async (req, res) => {
 const userProfile = async(req,res)=>{
     try {
         const user = req.user
-        console.log(user)    
+        console.log("Current User",user)    
         return res.status(201).json(user)
     } catch (error) {
         return res.status(400).json({ message: "userProfile not found",error });

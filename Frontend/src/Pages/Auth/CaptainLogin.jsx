@@ -1,13 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { setCaptainData } from '../../Redux/captainSlice.js'
+import axios from 'axios'
+import { serverUrl } from '../../main.jsx'
+import { useDispatch } from 'react-redux'
 
 const CaptainLogin = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [showPassword, setShowPassword] = React.useState(false)
     const [error, setError] = React.useState('')
-
+    const dispatch = useDispatch()
     const validate = () => {
         if (!email) return 'Email is required'
         if (!/^\S+@\S+\.\S+$/.test(email)) return 'Enter a valid email'
@@ -22,7 +25,6 @@ const CaptainLogin = () => {
         setError(err)
         if (err) return
         const data = {email,password}
-        console.log(data)
         try {
             const response = await axios.post(`${serverUrl}/api/auth/captain/login`,data,{withCredentials:true})
             

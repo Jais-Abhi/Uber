@@ -1,5 +1,9 @@
+import axios from 'axios'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { serverUrl } from '../../main'
+import { setCaptainData } from '../../Redux/captainSlice'
+import { useDispatch } from 'react-redux'
 
 const CaptainRegister = () => {
     const [firstName, setFirstName] = React.useState('')
@@ -14,6 +18,9 @@ const CaptainRegister = () => {
     const [capacity, setCapacity] = React.useState(4)
     const [error, setError] = React.useState('')
 
+
+
+    const dispatch = useDispatch()
     // Get capacity range based on vehicle type
     const getCapacityRange = (type) => {
         switch(type) {
@@ -53,7 +60,7 @@ const CaptainRegister = () => {
         return ''
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const err = validate()
         setError(err)
@@ -69,6 +76,29 @@ const CaptainRegister = () => {
                 type: vehicleType,
                 capacity: parseInt(capacity)
             }
+        }
+
+        try {
+          const response = await axios.post(`${serverUrl}/api/auth/captain/register`,captainData,
+            {withCredentials:true}
+          )
+          console.log(response)
+          if(response.status===201){
+            localStorage.setItem("token",response.data.token)
+            dispatch(setCaptainData(response.data.captainObj))
+            setFirstName('')
+            setLastName('')
+            setEmail('')
+            setPassword('')
+            setConfirmPassword('')
+            setVehiclePlate('')
+            setVehicleColor('')
+            setVehicleType('car')
+            setCapacity(4)
+          }
+        } catch (error) {
+          console.log(error)
+          setError(error?.response?.data?.message)
         }
 
         console.log('Registering captain', captainData)

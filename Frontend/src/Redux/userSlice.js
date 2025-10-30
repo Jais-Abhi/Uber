@@ -4,18 +4,14 @@ const userSlice = createSlice({
     name : "user",
     initialState : {
         userData : null,
-        token : null,
     },
     reducers: {
         setUserData: (state, action) => {
-            state.userData = action.payload // Accept direct user data
-        },
-        setUserToken: (state, action) => {
-            state.token = action.payload // Accept direct token value
-        },
+            state.userData = action.payload
+        }
     }
 })
 
-export const {setUserData,setUserToken} = userSlice.actions
+export const {setUserData} = userSlice.actions
 
 export default userSlice.reducer
