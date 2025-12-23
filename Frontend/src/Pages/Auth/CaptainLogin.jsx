@@ -91,7 +91,7 @@ const CaptainLogin = () => {
                 {error ? <div className="text-red-600 text-sm">{error}</div> : null}
 
                 <button type="submit" className="w-full px-4 py-2 bg-black text-white rounded-md font-semibold hover:opacity-90">
-                    Login
+                    Login as captain
                 </button>
             </form>
 
